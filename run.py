@@ -1,5 +1,5 @@
-"""Run with: uvicorn app.main:app --reload --port 8000"""
+"""Run with: uvicorn main:app --reload --port 8000"""
 
-from app.main import app
+from main import app
 
 __all__ = ["app"]
