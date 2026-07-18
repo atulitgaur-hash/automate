@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PM Pipeline — Delhi / Noida / Gurugram / India</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="top">
+    <div class="brand">
+      <p class="brand-mark">PM Pipeline</p>
+      <p class="brand-sub">Intern · APM · Fresher · 0–2 YOE · Delhi / Noida / Gurugram / India</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="stat-n">{{ total }}</span><span class="stat-l">total</span></div>
+      <div class="stat"><span class="stat-n">{{ counts.get('new', 0) }}</span><span class="stat-l">new</span></div>
+      <div class="stat"><span class="stat-n">{{ counts.get('applied', 0) }}</span><span class="stat-l">applied</span></div>
+      <div class="stat"><span class="stat-n">{{ counts.get('reviewed', 0) }}</span><span class="stat-l">reviewed</span></div>
+    </div>
+    <form method="post" action="/refresh" class="refresh-form">
+      <button type="submit" class="btn btn-primary">Refresh sources</button>
+    </form>
+  </header>
+
+  <form class="filters" method="get" action="/">
+    <label>
+      Status
+      <select name="status">
+        <option value="all" {% if filters.status == 'all' %}selected{% endif %}>All</option>
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if filters.status == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Source
+      <select name="source">
+        <option value="">All</option>
+        {% for s in sources %}
+        <option value="{{ s }}" {% if filters.source == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Sort
+      <select name="sort">
+        <option value="fit_score" {% if filters.sort == 'fit_score' %}selected{% endif %}>Fit score</option>
+        <option value="seen_at" {% if filters.sort == 'seen_at' %}selected{% endif %}>Recently seen</option>
+        <option value="company" {% if filters.sort == 'company' %}selected{% endif %}>Company</option>
+      </select>
+    </label>
+    <label>
+      Min score
+      <input type="number" name="min_score" min="0" max="100" step="1" value="{{ filters.min_score }}" />
+    </label>
+    <label class="grow">
+      Search
+      <input type="search" name="q" placeholder="title, company, location…" value="{{ filters.q }}" />
+    </label>
+    <button type="submit" class="btn">Filter</button>
+  </form>
+
+  <main>
+    {% if not jobs %}
+    <section class="empty">
+      <h1>No listings yet</h1>
+      <p>Hit <strong>Refresh sources</strong> to pull Greenhouse &amp; Lever (no API keys). Add Adzuna / JSearch keys in <code>.env</code> for broader India search.</p>
+    </section>
+    {% else %}
+    <ul class="job-list">
+      {% for job in jobs %}
+      <li class="job" data-score="{{ job.fit_score }}">
+        <div class="job-score" title="Fit score">
+          <span class="score-n">{{ '%.0f'|format(job.fit_score) }}</span>
+          <span class="score-l">fit</span>
+        </div>
+        <div class="job-body">
+          <div class="job-meta">
+            <span class="source">{{ job.source }}</span>
+            {% if job.location %}<span class="loc">{{ job.location }}</span>{% endif %}
+            {% if job.salary %}<span class="salary">{{ job.salary }}</span>{% endif %}
+            <span class="status-pill status-{{ job.status }}">{{ job.status }}</span>
+          </div>
+          <h2 class="job-title"><a href="{{ job.url }}" target="_blank" rel="noopener">{{ job.title }}</a></h2>
+          <p class="job-company">{{ job.company }}</p>
+          {% if job.description %}
+          <p class="job-desc">{{ job.description[:280] }}{% if job.description|length > 280 %}…{% endif %}</p>
+          {% endif %}
+          <div class="job-actions">
+            <a class="btn btn-link" href="{{ job.url }}" target="_blank" rel="noopener">Open listing</a>
+            <form method="post" action="/status" class="status-form">
+              <input type="hidden" name="url" value="{{ job.url }}" />
+              <select name="status" onchange="this.form.submit()">
+                {% for s in statuses %}
+                <option value="{{ s }}" {% if job.status == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+            </form>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>Keyword fit scoring against <code>resume.txt</code> · SQLite · FastAPI</p>
+  </footer>
+</body>
+</html>
