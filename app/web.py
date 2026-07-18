@@ -234,6 +234,7 @@ def dashboard(
     sources = [r[0] for r in db.execute(select(JobListing.source).distinct()).all()]
 
     return templates.TemplateResponse(
+        request,
         "dashboard.html",
         {
             "request": request,
