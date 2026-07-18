@@ -1,17 +1,16 @@
 from __future__ import annotations
 
 import logging
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
 from fastapi import Depends, FastAPI, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -24,10 +23,22 @@ log = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parent.parent
 templates = Jinja2Templates(directory=str(ROOT / "templates"))
-scheduler = AsyncIOScheduler()
+
+IS_VERCEL = os.getenv("VERCEL") == "1"
+scheduler = None
+if not IS_VERCEL:
+    try:
+        from apscheduler.schedulers.asyncio import AsyncIOScheduler
+        from apscheduler.triggers.cron import CronTrigger
+
+        scheduler = AsyncIOScheduler()
+    except Exception:  # noqa: BLE001
+        log.warning("APScheduler unavailable — cron disabled")
 
 
-def _parse_cron(expr: str) -> Optional[CronTrigger]:
+def _parse_cron(expr: str):
+    if IS_VERCEL or scheduler is None:
+        return None
     expr = (expr or "").strip()
     if not expr:
         return None
@@ -35,6 +46,8 @@ def _parse_cron(expr: str) -> Optional[CronTrigger]:
     if len(parts) != 5:
         log.warning("Invalid REFRESH_CRON %r — expected 5 fields", expr)
         return None
+    from apscheduler.triggers.cron import CronTrigger
+
     minute, hour, day, month, day_of_week = parts
     return CronTrigger(
         minute=minute,
@@ -57,27 +70,39 @@ async def _scheduled_refresh() -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     reload_settings()
-    init_db()
+    try:
+        init_db()
+    except Exception:
+        log.exception("init_db failed")
+        raise
+
     settings = get_settings()
     trigger = _parse_cron(settings.refresh_cron)
-    if trigger:
+    if trigger and scheduler is not None:
         scheduler.add_job(_scheduled_refresh, trigger, id="daily_refresh", replace_existing=True)
         scheduler.start()
         log.info("Scheduler started with cron %s", settings.refresh_cron)
     else:
-        log.info("Scheduler disabled (empty REFRESH_CRON)")
+        log.info("Scheduler disabled (serverless or empty REFRESH_CRON)")
     yield
-    if scheduler.running:
+    if scheduler is not None and scheduler.running:
         scheduler.shutdown(wait=False)
 
 
 app = FastAPI(title="PM Job Pipeline", lifespan=lifespan)
-app.mount("/static", StaticFiles(directory=str(ROOT / "static")), name="static")
+
+_static_dir = ROOT / "static"
+if _static_dir.is_dir():
+    app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
 
 @app.get("/health")
 def health():
-    return {"ok": True, "time": datetime.utcnow().isoformat()}
+    return {
+        "ok": True,
+        "time": datetime.utcnow().isoformat(),
+        "vercel": IS_VERCEL,
+    }
 
 
 @app.post("/api/refresh", response_model=RefreshResult)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -71,23 +72,53 @@ class JobListing(Base):
 
 
 def make_engine():
-    from pathlib import Path
+    import os
+    from app.config import ROOT
 
     settings = get_settings()
     url = settings.database_url
+    # Vercel filesystem is read-only except /tmp
+    if os.getenv("VERCEL") == "1" and url.startswith("sqlite") and "/tmp/" not in url:
+        url = "sqlite:////tmp/pm_jobs.db"
+
     connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
     if url.startswith("sqlite:///"):
-        db_path = Path(url.replace("sqlite:///", "", 1))
-        db_path.parent.mkdir(parents=True, exist_ok=True)
+        raw = url.replace("sqlite:///", "", 1)
+        db_path = Path(raw)
+        if not db_path.is_absolute():
+            db_path = (ROOT / db_path).resolve()
+            url = f"sqlite:///{db_path}"
+        try:
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            fallback = Path("/tmp/pm_jobs.db")
+            url = f"sqlite:///{fallback}"
+            db_path = fallback
+            db_path.parent.mkdir(parents=True, exist_ok=True)
     return create_engine(url, connect_args=connect_args)
 
 
-engine = make_engine()
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+# Lazy init so env vars are available before first connection
+_engine = None
+_SessionLocal = None
+
+
+def get_engine():
+    global _engine, _SessionLocal
+    if _engine is None:
+        _engine = make_engine()
+        _SessionLocal = sessionmaker(bind=_engine, autoflush=False, autocommit=False)
+    return _engine
+
+
+def SessionLocal():
+    get_engine()
+    assert _SessionLocal is not None
+    return _SessionLocal()
 
 
 def init_db() -> None:
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=get_engine())
 
 
 def get_db():
