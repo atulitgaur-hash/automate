@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import DateTime, Float, String, Text, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
-from app.config import get_settings
+from .config import get_settings
 
 
 class JobStatus(str, Enum):
@@ -73,7 +73,7 @@ class JobListing(Base):
 
 def make_engine():
     import os
-    from app.config import ROOT
+    from .config import ROOT
 
     settings = get_settings()
     url = settings.database_url

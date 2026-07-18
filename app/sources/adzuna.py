@@ -4,9 +4,9 @@ import logging
 
 import httpx
 
-from app.config import Settings
-from app.db import Listing
-from app.normalize import normalize
+from ..config import Settings
+from ..db import Listing
+from ..normalize import normalize
 
 log = logging.getLogger(__name__)
 

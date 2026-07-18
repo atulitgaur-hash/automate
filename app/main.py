@@ -14,9 +14,9 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.config import get_settings, reload_settings
-from app.db import JobListing, JobStatus, RefreshResult, SessionLocal, get_db, init_db
-from app.refresh import run_refresh
+from .config import get_settings, reload_settings
+from .db import JobListing, JobStatus, RefreshResult, SessionLocal, get_db, init_db
+from .refresh import run_refresh
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger(__name__)

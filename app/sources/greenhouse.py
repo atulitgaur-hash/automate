@@ -5,9 +5,9 @@ from typing import Optional
 
 import httpx
 
-from app.companies import GREENHOUSE_COMPANIES
-from app.db import Listing
-from app.normalize import normalize
+from ..companies import GREENHOUSE_COMPANIES
+from ..db import Listing
+from ..normalize import normalize
 
 log = logging.getLogger(__name__)
 

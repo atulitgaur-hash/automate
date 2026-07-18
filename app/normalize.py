@@ -4,7 +4,7 @@ import html
 import re
 from typing import Optional
 
-from app.db import Listing
+from .db import Listing
 
 # Target band: fresher / 0–2 years only
 MAX_YEARS_EXPERIENCE = 2.0

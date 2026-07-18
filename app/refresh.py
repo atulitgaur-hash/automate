@@ -8,13 +8,13 @@ import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.config import get_settings
-from app.db import JobListing, Listing, RefreshResult
-from app.scoring import score_listing
-from app.sources.adzuna import fetch_adzuna
-from app.sources.greenhouse import fetch_greenhouse
-from app.sources.jsearch import fetch_jsearch
-from app.sources.lever import fetch_lever
+from .config import get_settings
+from .db import JobListing, Listing, RefreshResult
+from .scoring import score_listing
+from .sources.adzuna import fetch_adzuna
+from .sources.greenhouse import fetch_greenhouse
+from .sources.jsearch import fetch_jsearch
+from .sources.lever import fetch_lever
 
 log = logging.getLogger(__name__)
 
@@ -61,7 +61,7 @@ def upsert_listings(db: Session, listings: list[Listing]) -> int:
 
 def prune_stale_matches(db: Session) -> int:
     """Drop rows whose titles no longer pass the target-role filter (e.g. senior leaks)."""
-    from app.normalize import is_target_role
+    from .normalize import is_target_role
 
     removed = 0
     for row in db.scalars(select(JobListing)).all():

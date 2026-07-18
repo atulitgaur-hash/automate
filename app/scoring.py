@@ -4,9 +4,9 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
-from app.config import get_settings
-from app.db import Listing
-from app.normalize import location_relevance
+from .config import get_settings
+from .db import Listing
+from .normalize import location_relevance
 
 # Core role/signal terms — always scored even without a resume file
 CORE_TERMS = {
