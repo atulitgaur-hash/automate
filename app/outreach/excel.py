@@ -12,7 +12,7 @@ import pandas as pd
 
 from ..config import ROOT
 
-DEFAULT_EXCEL = ROOT / "data" / "Copy of System 2.xlsx"
+DEFAULT_EXCEL = ROOT / "assets" / "contacts.xlsx"
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 

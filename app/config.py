@@ -32,6 +32,24 @@ def _default_resume_pdf_path() -> str:
     return str(ROOT / "data" / "Kiriti_Nain_Resume.pdf")
 
 
+def _default_outreach_excel_path() -> str:
+    # Contact source — tracked in repo for deploys
+    bundled = ROOT / "assets" / "contacts.xlsx"
+    if bundled.exists():
+        return str(bundled)
+    legacy = ROOT / "data" / "Copy of System 2.xlsx"
+    if legacy.exists():
+        return str(legacy)
+    return str(bundled)
+
+
+def _default_outreach_tracker_path() -> str:
+    # Tracker is writable state — must use /tmp on Vercel
+    if os.getenv("VERCEL") == "1":
+        return "/tmp/outreach_tracker.xlsx"
+    return str(ROOT / "data" / "outreach_tracker.xlsx")
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=str(ROOT / ".env"),
@@ -54,8 +72,8 @@ class Settings(BaseSettings):
     gmail_app_password: str = ""
     gmail_smtp_host: str = "smtp.gmail.com"
     gmail_smtp_port: int = 587
-    outreach_excel_path: str = str(ROOT / "data" / "Copy of System 2.xlsx")
-    outreach_tracker_path: str = str(ROOT / "data" / "outreach_tracker.xlsx")
+    outreach_excel_path: str = _default_outreach_excel_path()
+    outreach_tracker_path: str = _default_outreach_tracker_path()
     # PDF resume attached to every outreach email (tracked under assets/)
     resume_pdf_path: str = _default_resume_pdf_path()
     resume_drive_file_id: str = "1zfSViW_5GqFtupzYOJvQiydflPc9v-Fl"

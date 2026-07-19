@@ -55,7 +55,9 @@ class Contact:
 
 def tracker_path() -> Path:
     settings = get_settings()
-    raw = getattr(settings, "outreach_tracker_path", "") or str(ROOT / "data" / "outreach_tracker.xlsx")
+    raw = getattr(settings, "outreach_tracker_path", "") or str(
+        ROOT / "data" / "outreach_tracker.xlsx"
+    )
     return Path(raw)
 
 
