@@ -35,6 +35,20 @@ class Settings(BaseSettings):
     database_url: str = _default_database_url()
     refresh_cron: str = _default_refresh_cron()
 
+    # Outreach / email automation
+    openai_api_key: str = ""
+    openai_model: str = "gpt-5.1"
+    kiriti_profile_path: str = str(ROOT / "data" / "kiriti_profile.txt")
+    gmail_address: str = "kitinain@gmail.com"
+    gmail_app_password: str = ""
+    gmail_smtp_host: str = "smtp.gmail.com"
+    gmail_smtp_port: int = 587
+    outreach_excel_path: str = str(ROOT / "data" / "Copy of System 2.xlsx")
+    outreach_tracker_path: str = str(ROOT / "data" / "outreach_tracker.xlsx")
+    # PDF resume attached to every outreach email
+    resume_pdf_path: str = str(ROOT / "data" / "Kiriti_Nain_Resume.pdf")
+    resume_drive_file_id: str = "1zfSViW_5GqFtupzYOJvQiydflPc9v-Fl"
+
     # Search focus — India-wide; Delhi/Noida/NCR boosted in scoring
     target_location: str = "Delhi, Noida, India"
     search_queries: list[str] = [

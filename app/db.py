@@ -71,6 +71,33 @@ class JobListing(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
 
 
+class OutreachStatus(str, Enum):
+    pending = "pending"
+    drafted = "drafted"
+    accepted = "accepted"
+    rejected = "rejected"
+    sent = "sent"
+    failed = "failed"
+
+
+class OutreachContact(Base):
+    __tablename__ = "outreach_contacts"
+
+    email: Mapped[str] = mapped_column(String(320), primary_key=True)
+    name: Mapped[str] = mapped_column(String(256), nullable=False, default="")
+    company: Mapped[str] = mapped_column(String(256), nullable=False, index=True)
+    domain: Mapped[str] = mapped_column(String(256), nullable=False, default="")
+    sheet: Mapped[str] = mapped_column(String(64), nullable=False, default="")
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default=OutreachStatus.pending.value, index=True)
+    subject: Mapped[str] = mapped_column(String(512), nullable=False, default="")
+    body: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    notes: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    error: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
+    sent_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+
+
 def make_engine():
     import os
     from .config import ROOT

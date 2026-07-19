@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Outreach — Kiriti Nain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/outreach.css" />
+</head>
+<body>
+  <div class="orbit" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><a href="/">Jobs</a> · Outreach · <code>outreach_tracker.xlsx</code></p>
+        <h1>Outreach</h1>
+        <p class="lede">GPT-5.1 drafts · edit · accept · send from kitinain@gmail.com</p>
+      </div>
+      <div class="hero-stats">
+        <div><span class="n" id="stat-companies">{{ companies|length }}</span><span class="l">companies</span></div>
+        <div><span class="n" id="stat-contacts">{{ total_contacts }}</span><span class="l">contacts</span></div>
+      </div>
+      <div class="hero-actions">
+        <details class="profile">
+          <summary>Profile</summary>
+          <pre>{{ profile_preview }}{% if profile_preview|length >= 400 %}…{% endif %}
+
+Edit: data/kiriti_profile.txt</pre>
+        </details>
+        <button type="button" class="btn btn-accent" id="btn-sync">Import Excel</button>
+      </div>
+    </header>
+
+    <section class="studio">
+      <aside class="pane companies">
+        <div class="pane-head">
+          <h2>Companies</h2>
+          <input type="search" id="company-filter" placeholder="Filter…" />
+        </div>
+        <ul id="company-list">
+          {% for c in companies %}
+          <li>
+            <button type="button" class="company-btn" data-company="{{ c.company }}">
+              <span class="co-name">{{ c.company }}</span>
+              <span class="co-meta">{{ c.total }} · {{ c.sent }} sent</span>
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+      </aside>
+
+      <aside class="pane people">
+        <div class="pane-head">
+          <h2 id="people-title">People</h2>
+          <select id="status-filter">
+            <option value="all">All statuses</option>
+            {% for s in statuses %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="pane-actions">
+          <button type="button" class="btn" id="btn-gen-batch" disabled>Draft 5 with GPT</button>
+        </div>
+        <ul id="people-list" class="empty-hint">
+          <li class="hint">Pick a company to load contacts.</li>
+        </ul>
+      </aside>
+
+      <main class="pane editor">
+        <div class="pane-head">
+          <h2>Draft</h2>
+          <span id="draft-status" class="pill">idle</span>
+        </div>
+
+        <div class="editor-scroll">
+          <div id="editor-empty" class="editor-empty">
+            <p>Select a person. We’ll feed GPT your profile, their name/email, and the company — then you approve before anything sends.</p>
+          </div>
+
+          <form id="draft-form" class="draft-form hidden">
+            <label>To
+              <input type="email" id="field-to" autocomplete="off" placeholder="name@company.com" />
+            </label>
+            <label>Subject
+              <input type="text" id="field-subject" />
+            </label>
+            <div id="subject-options" class="subject-options" hidden></div>
+            <label class="body-label">Body
+              <textarea id="field-body" rows="10"></textarea>
+            </label>
+            <label>Notes for GPT (optional)
+              <textarea id="field-notes" rows="2" placeholder="e.g. mention their fintech lending product…"></textarea>
+            </label>
+            <div class="draft-actions">
+              <button type="button" class="btn" id="btn-generate">Generate</button>
+              <button type="button" class="btn" id="btn-save">Save edits</button>
+              <button type="button" class="btn btn-good" id="btn-accept">Accept</button>
+              <button type="button" class="btn btn-warn" id="btn-reject">Reject</button>
+              <button type="button" class="btn btn-accent" id="btn-send">Send email</button>
+            </div>
+            <p id="draft-msg" class="msg" hidden></p>
+          </form>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <script src="/static/outreach.js"></script>
+</body>
+</html>

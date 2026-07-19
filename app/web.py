@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 
 from .config import get_settings, reload_settings
 from .db import JobListing, JobStatus, RefreshResult, SessionLocal, get_db, init_db
+from .outreach.routes import router as outreach_router
 from .refresh import run_refresh
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -90,6 +91,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="PM Job Pipeline", lifespan=lifespan)
+app.include_router(outreach_router)
 
 _static_dir = ROOT / "static"
 if _static_dir.is_dir():
