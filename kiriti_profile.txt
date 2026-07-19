@@ -1,0 +1,150 @@
+# **Kiriti Nain**
+
+**Email:** [kitinain@gmail.com](mailto:kitinain@gmail.com)
+**LinkedIn:** linkedin.com/in/kiritinain
+**GitHub:** github.com/kirinain
+
+## Outside work / how I think (for cold emails)
+
+Hobbies (one blunt line after company praise, like Soham's personal bit):
+- Loves reading books
+- Writes poems
+- Curious about science
+- Big into sports of all kinds
+- Plays guitar sometimes
+
+Mindset (use naturally in the personal bit when it fits):
+- Loves getting to the very bottom of things: how and why they work
+- Reverse-engineers systems and also hits problems from first principles / the basics
+- Loves solving complex problems
+- Loves building products and thinking about building things that help the world in some way
+
+Email shape (Soham-style, not early-stage framing):
+1) Hi Name,
+2) One line on what you like about THEIR company / what they're doing
+3) Short blunt personal paragraph (hobbies + how you think / build)
+4) Work: NikahForever + Xander in plain words
+5) Want to join / referral
+6) Looking forward to hearing from you soon!
+
+Good hobby line: "Outside of work I mostly read, write poems, play sports, and mess around on a guitar."
+Bad: poetic metaphors, hobby lists labeled as hobbies, starting the email with yourself.
+
+## Education
+
+**Maharaja Agrasen Institute of Technology**
+*B.Tech, Electrical and Electronics Engineering*
+**Nov 2022 – Jul 2026 | New Delhi, India**
+
+* CGPA: 8.2
+* Certifications:
+
+  * Product Management (IBM, Coursera)
+  * BCG Strategy Consulting Simulation
+
+## Experience
+
+### Product Management Intern
+
+**NikahForever**
+**Apr 2026 – Present | Delhi, India**
+
+* Owned Trust & Safety and Activity/Matching feature specifications, authoring 6 PRDs that converted cohort-level insights into product requirements.
+* Queried cohort data across 587K+ interests to diagnose match-quality drop-offs, uncovering:
+
+  * 26.32% premium message attachment rate
+  * 6.8×–20.5× higher acceptance rate for messaged users
+* Found that 60.83% of accepted matches originated from the Activity surface and reprioritized the roadmap around a Matching Card redesign.
+* Redesigned Activity into a 3-tab, ML-ranked architecture projected to double the baseline acceptance rate before launch.
+* Designed a post-send nudge feature projected to increase reply likelihood by 3×.
+
+### Product Strategy & GTM
+
+**Xander-Corp**
+**Nov 2025 – Feb 2026 | Remote**
+
+* Owned product strategy and go-to-market for a no-code ML SaaS platform from concept to first activated users.
+* Conducted user discovery, defined ICP and pricing strategy, and redesigned onboarding using early user feedback.
+* Accepted into the AWS Activate Founders Program.
+* Advanced to the Eureka! IIT Bombay zonalist round.
+
+## Projects
+
+### Rang De – Co-Creation PRD for Nykaa
+
+**Jun 2026**
+
+* Designed a co-creation feature enabling users to mix, name, and publish custom cosmetic shades.
+* Targeted:
+
+  * > 60% creator repurchase rate
+  * > 40% organic share rate
+* Replaced commission payouts with a zero-cost recognition system (badges, live sales counter).
+* Limited pilot to 50 creators with 5 predefined success metrics before scaling to 500 creators.
+
+### Spotify Jam Assist – Concept PRD
+
+**Jun 2026**
+
+* Proposed a real-time backing track feature synchronized to tempo and key.
+* Designed an MVP with selectable instrument/accompaniment layers.
+* Positioned the feature as a retention driver for Spotify's live and social listening experience.
+
+### FinToolekt – Intelligent Automation for Audit Workflows
+
+**Jun 2024**
+
+* Converted auditor requirements into ML-powered product features for workflow automation.
+* Balanced anomaly detection accuracy with usability for non-technical users.
+* Defined explainability requirements so automated flags remained actionable.
+
+## Technical Skills
+
+### Product & Strategy
+
+* Product Discovery
+* User Research
+* Cohort Analysis
+* Funnel Analysis
+* Roadmapping
+* PRD Writing
+* MVP Definition
+* GTM Strategy
+* Stakeholder Management
+
+### Data & Analytics
+
+* SQL
+* CleverTap
+* A/B Testing
+* Excel
+
+### AI / ML
+
+* Python
+* LLM Fundamentals
+* ML Pipelines
+
+### Tools
+
+* Notion
+* Jira
+* Figma
+
+## Achievements
+
+* Top 600 out of 25,000 teams – Eureka! IIT Bombay E-Cell (2024)
+* Winner – Empowher Hackathon (2023)
+* 3rd Place – ML Code Crunch (2024)
+
+## Leadership & Community
+
+**Core Member – ATOM Robotics Lab**
+
+* Worked on autonomous systems research.
+* Mentored junior members.
+* Conducted technical workshops.
+
+**Member – Refine Consulting Club**
+
+* Participated in strategy simulations and case competitions.

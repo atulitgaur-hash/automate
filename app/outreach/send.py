@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import smtplib
 import ssl
 from email.mime.application import MIMEApplication
@@ -11,7 +12,7 @@ from pathlib import Path
 
 import httpx
 
-from ..config import get_settings
+from ..config import ROOT, get_settings
 
 
 def _drive_download_url(file_id: str) -> str:
@@ -22,11 +23,18 @@ def ensure_resume_pdf() -> Path:
     """Return local PDF path, downloading from Google Drive once if missing."""
     settings = get_settings()
     path = Path(settings.resume_pdf_path)
-    if path.exists() and path.stat().st_size > 1000:
-        # sanity: PDF magic
-        head = path.read_bytes()[:5]
-        if head.startswith(b"%PDF"):
-            return path
+    bundled = ROOT / "assets" / "Kiriti_Nain_Resume.pdf"
+
+    # Prefer any existing valid PDF (tracked asset works on Vercel read-only FS)
+    for candidate in (bundled, path):
+        if candidate.exists() and candidate.stat().st_size > 1000:
+            head = candidate.read_bytes()[:5]
+            if head.startswith(b"%PDF"):
+                return candidate
+
+    # Missing — download. On Vercel write only under /tmp.
+    if os.getenv("VERCEL") == "1":
+        path = Path("/tmp/Kiriti_Nain_Resume.pdf")
 
     file_id = (settings.resume_drive_file_id or "").strip()
     if not file_id:
@@ -40,7 +48,6 @@ def ensure_resume_pdf() -> Path:
         resp = client.get(url)
         # Google sometimes returns an HTML confirm page for large files
         if "text/html" in resp.headers.get("content-type", "") and "confirm=" in resp.text:
-            # try confirm token scrape lightly
             token = None
             for part in resp.text.split("confirm="):
                 if not part:

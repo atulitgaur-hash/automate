@@ -21,6 +21,17 @@ def _default_refresh_cron() -> str:
     return "0 8 * * *"
 
 
+def _default_resume_pdf_path() -> str:
+    # Prefer tracked asset so deploys have the file without Drive.
+    bundled = ROOT / "assets" / "Kiriti_Nain_Resume.pdf"
+    if bundled.exists():
+        return str(bundled)
+    # Vercel is read-only except /tmp — cache Drive downloads there
+    if os.getenv("VERCEL") == "1":
+        return "/tmp/Kiriti_Nain_Resume.pdf"
+    return str(ROOT / "data" / "Kiriti_Nain_Resume.pdf")
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=str(ROOT / ".env"),
@@ -38,15 +49,15 @@ class Settings(BaseSettings):
     # Outreach / email automation
     openai_api_key: str = ""
     openai_model: str = "gpt-5.1"
-    kiriti_profile_path: str = str(ROOT / "data" / "kiriti_profile.txt")
+    kiriti_profile_path: str = str(ROOT / "kiriti_profile.txt")
     gmail_address: str = "kitinain@gmail.com"
     gmail_app_password: str = ""
     gmail_smtp_host: str = "smtp.gmail.com"
     gmail_smtp_port: int = 587
     outreach_excel_path: str = str(ROOT / "data" / "Copy of System 2.xlsx")
     outreach_tracker_path: str = str(ROOT / "data" / "outreach_tracker.xlsx")
-    # PDF resume attached to every outreach email
-    resume_pdf_path: str = str(ROOT / "data" / "Kiriti_Nain_Resume.pdf")
+    # PDF resume attached to every outreach email (tracked under assets/)
+    resume_pdf_path: str = _default_resume_pdf_path()
     resume_drive_file_id: str = "1zfSViW_5GqFtupzYOJvQiydflPc9v-Fl"
 
     # Search focus — India-wide; Delhi/Noida/NCR boosted in scoring

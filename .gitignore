@@ -1,4 +1,5 @@
 .env
+# Runtime / local only — Excel trackers, DB, PDF cache (not profile/resume text)
 data/
 __pycache__/
 *.pyc
